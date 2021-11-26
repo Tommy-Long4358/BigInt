@@ -6,7 +6,7 @@
 
 BigInt::BigInt()
 {
-    storage.push_back(0);
+    storage.push_back(0 + '0');
 }
   
 BigInt::BigInt(string n)
@@ -30,16 +30,19 @@ BigInt::BigInt(int n)
 
 BigInt::BigInt(const BigInt& b1)
 {
-    storage = b1.storage;
+    storage.clear();
+
+    for (int i = 0; i < b1.storage.size(); i++)
+    {
+        storage.push_back(b1.storage[i]);
+    }
 }
 
-BigInt BigInt::operator=(const BigInt &b1)
+BigInt BigInt::operator=(const BigInt& b1)
 {
-    BigInt b3;
+    storage = b1.storage;
 
-    b3.storage = b1.storage;
-   
-    return b3;
+    return *this;
 }
 
 void BigInt::print() const
@@ -81,86 +84,9 @@ ostream& operator<<(ostream& out, const BigInt& b1)
     }
 }
 
-/*
-BigInt BigInt::operator+(int num)
-{
-    vector<char> ans;
-
-    vector<char> b1;
-    vector<char> min;
-    vector<char> max;
-
-    int i = 0;
-    int carry = 0;
-    int sum = 0;
-
-    
-
-    while (num != 0)
-    {
-        sum = num % 10;
-
-        b1.push_back(sum);
-
-        num = num / 10;
-    }
-
-    reverse(b1.begin(), b1.end());
-
-    if (storage.size() < b1.size())
-    {
-        min = storage;
-        max = b1;
-    }
-    else
-    {
-        max = storage;
-        min = b1;
-    }
-
-    for (rit = max.rbegin(); rit != max.rend(); rit++)
-    {
-
-        if (i < min.size())
-        {
-            sum = int(*rit) + int(min[min.size() - 1 - i]) + carry;
-        }
-        else
-        {
-            sum = int(*rit) + carry;
-        }
-
-        if (sum >= 10)
-        {
-            ans.push_back(sum % 10);
-            carry = sum / 10;
-        }
-        else
-        {
-            ans.push_back(sum);
-            carry = 0;
-        }
-
-        i++;
-    }
-
-    if (carry > 0)
-    {
-        ans.push_back(carry);
-    }
-
-    reverse(ans.begin(), ans.end());
-
-    storage = ans;
-
-    return *this;
-}
-*/
-
-
 BigInt BigInt::operator+(const BigInt& b1)
 {
-    
+    BigInt b3;
     vector<char> ans;
 
     vector<char> min;
@@ -170,14 +96,16 @@ BigInt BigInt::operator+(const BigInt& b1)
     int carry = 0;
     int sum = 0;
 
-    if (storage.size() < b1.storage.size())
+    b3.storage = storage;
+
+    if (b3.storage.size() < b1.storage.size())
     {
-        min = storage;
+        min = b3.storage;
         max = b1.storage;
     }
     else
     {
-        max = storage;
+        max = b3.storage;
         min = b1.storage;
     }
 
@@ -214,56 +142,38 @@ BigInt BigInt::operator+(const BigInt& b1)
 
     reverse(ans.begin(), ans.end());
 
-    storage = ans;
+    b3.storage = ans;
 
-    return *this;
+    return b3;
 }
 
 BigInt BigInt::operator-(const BigInt& b2)
 {
     BigInt b3;
-    
+
     vector<char> ans;
-   
+
     vector<char> min;
     vector<char> max;
 
     int sum = 0;
     int index = 0;
+    b3.storage = storage;
 
-    if (storage.size() > b2.storage.size())
+    if (b3.storage.size() > b2.storage.size())
     {
-        max = storage;
+        max = b3.storage;
         min = b2.storage;
     }
-    else if (storage.size() < b2.storage.size())
+    else if (b3.storage.size() < b2.storage.size())
     {
         max = b2.storage;
-        min = storage;
+        min = b3.storage;
     }
     else
     {
-        if (*this == b2)
-        {
-            max = storage;
-            min = b2.storage;
-        }
-
-        for (int i = 0; i < storage.size(); i++)
-        {
-            if (int(storage[i]) < int(b2.storage[i]))
-            {
-                max = b2.storage;
-                min = storage;
-                break;
-            }
-            else if (int(storage[i]) > int(b2.storage[i]))
-            {
-                max = storage;
-                min = b2.storage;
-                break;
-            }
-        }
+        max = b3.storage;
+        min = b2.storage;
     }
 
     for (rit = max.rbegin(); rit != max.rend(); rit++)
@@ -288,7 +198,7 @@ BigInt BigInt::operator-(const BigInt& b2)
                         max[max.size() - 1 - j] -= 1;
                         break;
                     }
-                    else 
+                    else
                     {
                         max[max.size() - 1 - j] = (max[max.size() - 1 - j] + 10) - 1;
                     }
@@ -304,7 +214,7 @@ BigInt BigInt::operator-(const BigInt& b2)
                         max[max.size() - 1 - j] -= 1;
                         break;
                     }
-          
+
                 }
             }
 
@@ -312,16 +222,16 @@ BigInt BigInt::operator-(const BigInt& b2)
             ans.push_back(sum);
         }
         else
-        { 
-           ans.push_back(sum);
+        {
+            ans.push_back(sum);
         }
 
         index++;
     }
-   
+
     reverse(ans.begin(), ans.end());
     b3.storage = ans;
-    
+
     if (b3.storage.size() > 1)
     {
         for (int j = 0; j < ans.size(); j++)
@@ -338,7 +248,7 @@ BigInt BigInt::operator-(const BigInt& b2)
     }
 
 
-   
+
     return b3;
 }
 
@@ -354,37 +264,12 @@ BigInt operator++(BigInt& b1, int num)
 
 bool BigInt::operator==(const BigInt& b2)
 {
-    /*
-    if (storage.size() < b2.storage.size())
-    {
-        return false;
-    }
-    else if (storage.size() > b2.storage.size())
-    {
-        return false;
-    }
-    
-      
-    for (int i = 0; i < storage.size(); i++)
-    {
-        if (int(storage[i]) != int(b2.storage[i]))
-        {
-            return false;
-        }
-    }
-
-    return true;
-    
-    */
-
     if (storage == b2.storage)
     {
         return true;
     }
 
     return false;
-
-
 }
 
 bool BigInt::operator<=(const BigInt& b2)
@@ -398,7 +283,7 @@ bool BigInt::operator<=(const BigInt& b2)
         return false;
     }
 
-    if (*this == b2)
+    if (storage == b2.storage)
     {
         return true;
     }
@@ -419,37 +304,40 @@ bool BigInt::operator<=(const BigInt& b2)
   
 }
 
-bool BigInt::operator<(const BigInt& b2)
+
+bool operator<(BigInt b1, BigInt b2)
 {
-    if (storage.size() < b2.storage.size())
+
+    if (b1.storage.size() < b2.storage.size())
     {
         return true;
     }
-    else if (storage.size() > b2.storage.size())
+    else if (b1.storage.size() > b2.storage.size())
     {
         return false;
     }
 
-    if (*this == b2)
+    if (b1.storage == b2.storage)
     {
         return false;
     }
 
-    for (int i = 0; i < storage.size(); i++)
+    for (int i = 0; i < b1.storage.size(); i++)
     {
-        if (int(storage[i]) < int(b2.storage[i]))
+        if (int(b1.storage[i]) < int(b2.storage[i]))
         {
             return true;
         }
-        else if (int(storage[i]) > int(b2.storage[i]))
+        else if (int(b1.storage[i]) > int(b2.storage[i]))
         {
             return false;
         }
     }
 
     return false;
-}
 
+
+}
 
 
 
