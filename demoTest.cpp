@@ -100,20 +100,44 @@ int goldRabbits(int n)
 BigInt goldRabbits(BigInt n)
 {
 	static map<BigInt, BigInt> bigIntRabbits;
+	
 
-	if (n == BigInt(0) || n == BigInt(1))
+	BigInt sum;
+
+	/*
+	if (n == BigInt(1) || n == BigInt(1))
 	{
 		return BigInt(1);
 	}
 	else
 	{
 		return goldRabbits(n - BigInt(1)) + goldRabbits(n - BigInt(2));
-
-
 	}
+	*/
+	
 
+	
+	// if map has n as the key, then return the value
+	if (bigIntRabbits.find(n) != bigIntRabbits.end())
+	{
+		return bigIntRabbits[n];
+	}
+	// else calculate n and store in rabbit map
+	else
+	{
+		if (n == BigInt(0) || n == BigInt(1))
+		{
+			return BigInt(1);
+		}
 
-	// if we have seen n, then use it
+		sum = goldRabbits(n - BigInt(1)) + goldRabbits(n - BigInt(2));
+		
+		bigIntRabbits.insert(make_pair(n, sum));
+
+		return sum;
+
+		
+	}
 }
 
 
