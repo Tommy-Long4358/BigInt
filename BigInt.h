@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -21,7 +20,7 @@ class BigInt
 		BigInt operator-(const BigInt&);
 		bool operator<=(const BigInt&);
 		bool operator==(const BigInt&);
-		bool operator<(const BigInt&);
+		friend bool operator<(BigInt, BigInt);
 		friend BigInt operator++(BigInt&, int);
 		void print() const;
 };
