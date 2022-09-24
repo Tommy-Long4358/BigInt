@@ -1,3 +1,5 @@
+#ifndef BIGINT_H
+#define BIGINT_H
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -13,15 +15,14 @@ class BigInt
 		BigInt();
 		BigInt(string);
 		BigInt(int);
-		BigInt(const BigInt&);
-		BigInt operator=(const BigInt&);
+		BigInt operator=(BigInt);
 		friend ostream& operator<<(ostream&, const BigInt&);
-		BigInt operator+(const BigInt&);
-		BigInt operator-(const BigInt&);
-		bool operator<=(const BigInt&);
-		bool operator==(const BigInt&);
+		BigInt operator+(BigInt);
+		BigInt operator-(BigInt);
+		bool operator<=(BigInt);
+		bool operator==(BigInt);
 		friend bool operator<(BigInt, BigInt);
-		friend BigInt operator++(BigInt&, int);
+		BigInt operator++(int);
 		void print() const;
 };
-
+#endif
